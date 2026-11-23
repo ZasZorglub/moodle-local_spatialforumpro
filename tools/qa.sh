@@ -10,6 +10,7 @@ moodle_source="$(cd "$1" && pwd)"
 base_source="$(cd "$2" && pwd)"
 pro_source="$(cd "$(dirname "$0")/.." && pwd)"
 test -f "$moodle_source/vendor/bin/phpunit"
+test -f "$moodle_source/composer.phar"
 test -f "$base_source/version.php"
 qa_id="sfpro-qa-$(date +%s)-$$"
 docker network create --internal "$qa_id" >/dev/null || exit 1
@@ -23,6 +24,7 @@ docker run --rm --name "$qa_id-php" --network "$qa_id" --entrypoint bash --mount
 mkdir -p /tmp/sfpro-moodle /tmp/sfpro-data /tmp/sfpro-phpunit
 git -c safe.directory=/moodle -C /moodle archive HEAD | tar -C /tmp/sfpro-moodle -xf -
 cp -a /moodle/vendor /tmp/sfpro-moodle/vendor
+cp /moodle/composer.phar /tmp/sfpro-moodle/composer.phar
 cd /tmp/sfpro-moodle
 cp /pro/tools/phpunit-config.php config.php
 mkdir -p public/mod/spatialforum public/local/spatialforumpro
