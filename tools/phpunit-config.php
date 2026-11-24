@@ -23,8 +23,5 @@ $CFG->directorypermissions = 02777;
 $CFG->phpunit_prefix = 'tst_';
 $CFG->phpunit_dataroot = '/tmp/sfpro-phpunit';
 $CFG->noemailever = true;
-if (is_readable('/tmp/sfpro-http-public.pem')) {
-    $CFG->local_spatialforumpro_publickey = file_get_contents('/tmp/sfpro-http-public.pem');
-}
 
 require_once(__DIR__ . '/lib/setup.php');

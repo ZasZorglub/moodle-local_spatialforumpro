@@ -21,7 +21,7 @@ The licence custodian chooses the key passphrase in an interactive terminal and 
 bash tools/provision_key.sh "/path/to/private-parent/spatial-forum-pro"
 ```
 
-The directory contains a 3072-bit encrypted RSA signing key, the public verification key, and the empty licence registry. Back up the private key and the registry with access restricted to the custodian. Keep the registry in one authoritative location on a filesystem supporting hard links. Keep review and production keys separate. To build a production ZIP, stage only the verified public key at the plugin root as `public-key.pem` and check that the ZIP contains no private key, credentials or records. A keyless review ZIP accepts a review public key from Moodle's root configuration.
+The directory contains a 3072-bit encrypted RSA signing key, the public verification key, and the empty licence registry. Back up the private key and the registry with access restricted to the custodian. Keep the registry in one authoritative location on a filesystem supporting hard links. Keep review and production keys separate. The production ZIP includes the public verification key as `public-key.pem` at the plugin root. The isolated QA runner substitutes a disposable key for its HTTP checks. A build without a bundled key accepts a QA public key from the Moodle root configuration.
 
 ## Marketplace checkout and licence fulfilment
 
@@ -57,6 +57,14 @@ unset sfpro_passphrase
 ```
 
 The CLI checks the catalogue price and billing interval and gives the same licence for a retry with the same details. Reusing the order reference for different terms or a different site is rejected. The operator verifies payment and the site association. Moodle's [public Marketplace API](https://moodledev.io/general/community/plugincontribution/marketplace-api/moodle-marketplace-api) documents catalogue, release, download and buyer purchase operations. Enable automatic fulfilment only after confirming that the Marketplace supplies sellers with authenticated payment and renewal events.
+
+## Production package
+
+Build the 0.1.0-beta.2 installation ZIP from the corresponding source revision. Check that the only PEM file in the ZIP is `spatialforumpro/public-key.pem`, and compare it with the custodian's public key.
+
+```sh
+git archive --format=zip --prefix=spatialforumpro/ --output=../local_spatialforumpro-0.1.0-beta.2.zip HEAD
+```
 
 ## Verification for 0.1.0-beta.1
 

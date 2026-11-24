@@ -6,7 +6,7 @@ Spatial forum Pro adds participation analytics, a cross-forum moderation overvie
 
 1. Install or upgrade the free Spatial forum activity. Pro requires Moodle 5.0–5.3 and PHP OpenSSL.
 2. Install the Pro ZIP in **Site administration → Plugins → Install plugins**, or extract it into the Moodle web root at `local/spatialforumpro` and run the Moodle upgrade.
-3. The production package can ship with the provider's verification key. For a review build with no bundled key, set `$CFG->local_spatialforumpro_publickey` in Moodle's root `config.php` to the supplied public PEM content. Use a separate key for review.
+3. The production package includes the provider's verification key. For an isolated QA build without a bundled key, set `$CFG->local_spatialforumpro_publickey` in Moodle's root `config.php` to the supplied public PEM content. Use a separate key for review.
 4. In **Site administration → Plugins → Local plugins → Spatial forum Pro**, copy the fingerprint, request an entitlement from the provider, and paste the signed licence. The trial starts on the issue date agreed with the customer.
 5. Open **Site administration → Reports → Spatial forum Pro participation**. Use the course, forum, and time filters and download the same selection as CSV. CSV dates use UTC. Switch to **Moderation overview** to see recently active and unanswered threads with links back to the original posts.
 6. Optionally enable **Generate weekly site summary** in the Pro settings. Moodle cron calculates totals for the previous completed Monday–Monday UTC week, and the latest summary appears on the participation page for site administrators. No messages are sent.

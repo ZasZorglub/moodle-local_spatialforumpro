@@ -52,7 +52,7 @@ webroot=.
 [[ ! -f public/version.php ]] || webroot=public
 mkdir -p "$webroot/mod/spatialforum" "$webroot/local/spatialforumpro"
 tar --exclude=./.git -C /base -cf - . | tar -C "$webroot/mod/spatialforum" -xf -
-tar --exclude=./.git -C /pro -cf - . | tar -C "$webroot/local/spatialforumpro" -xf -
+tar --exclude=./.git --exclude=./public-key.pem -C /pro -cf - . | tar -C "$webroot/local/spatialforumpro" -xf -
 php "$webroot/admin/tool/phpunit/cli/init.php" --disable-composer >/tmp/sfpro-init.log 2>&1 || { tail -100 /tmp/sfpro-init.log; exit 1; }
 tail -4 /tmp/sfpro-init.log
 vendor/bin/phpunit --testsuite local_spatialforumpro_testsuite
@@ -97,7 +97,7 @@ qa_url="$SFPRO_WWWROOT/local/spatialforumpro/index.php"
 curl -fsS -b /tmp/sfpro-admin-cookie "$qa_url" >/tmp/sfpro-inactive || { tail -30 /tmp/sfpro-web.log; exit 1; }
 grep -Foq "No valid Spatial forum Pro licence is installed." /tmp/sfpro-inactive
 echo "Inactive report verified."
-openssl pkey -in /tmp/sfpro-key.pem -pubout -out /tmp/sfpro-http-public.pem
+openssl pkey -in /tmp/sfpro-key.pem -pubout -out "$webroot/local/spatialforumpro/public-key.pem"
 site_fingerprint=$(printf "%s" "$SFPRO_WWWROOT" | sha256sum | cut -d" " -f1)
 php "$issuer_script" /tmp/sfpro-key.pem /tmp/sfpro-trials "$site_fingerprint" starter trial "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >/tmp/sfpro-http-token
 php admin/cli/cfg.php --component=local_spatialforumpro --name=licence --set="$(cat /tmp/sfpro-http-token)" >/dev/null
