@@ -59,15 +59,8 @@ vendor/bin/phpunit --testsuite local_spatialforumpro_testsuite
 umask 077
 mkdir /tmp/sfpro-trials
 openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /tmp/sfpro-key.pem 2>/dev/null
-issuer_site=$(printf "%064d" 0)
 issuer_script="$webroot/local/spatialforumpro/tools/issue_licence.php"
-php "$issuer_script" /tmp/sfpro-key.pem /tmp/sfpro-trials "$issuer_site" starter trial 2026-11-23T00:00:00Z >/tmp/sfpro-first-token
-if php "$issuer_script" /tmp/sfpro-key.pem /tmp/sfpro-trials "$issuer_site" starter trial 2026-11-23T00:00:00Z >/dev/null 2>/tmp/sfpro-second-error; then
-  exit 1
-fi
-grep -F "A trial may already exist for this site" /tmp/sfpro-second-error
-php "$issuer_script" /tmp/sfpro-key.pem /tmp/sfpro-trials "$issuer_site" starter paid 2027-02-23T00:00:00Z 2027-03-23T00:00:00Z >/dev/null
-echo "Manual issuer: trial, duplicate denial, and paid issuance verified."
+bash "$webroot/local/spatialforumpro/tools/qa_issuer.sh" /tmp/sfpro-key.pem /tmp/sfpro-trials
 
 
 chmod -R 0777 /tmp/sfpro-data
