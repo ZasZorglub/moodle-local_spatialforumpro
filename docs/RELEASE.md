@@ -8,7 +8,7 @@
 - Dependency: `mod_spatialforum`, build `2026111600` or later
 - Short description: Track participation across Spatial forums, find unanswered discussions, and get a weekly overview in Moodle.
 - Description: Spatial forum Pro adds filters and CSV export for participation reports, a moderation overview with links to active and unanswered threads, and an optional weekly site summary. It works with your existing Spatial forum activities, so schools can add Pro without migrating conversations or attachments.
-- Pricing and trial: use the six USD price options and site limits in [README](../README.md#plans-and-trial). Enterprise is quoted separately. Draft trial copy: “Try Spatial forum Pro free for three calendar months per Moodle site. No payment is required to start your trial. To keep using Pro, choose a paid subscription after the trial.”
+- Pricing and trial: use the [Marketplace price options below](#marketplace-price-options).
 - [Participation report and weekly summary](screenshots/01-participation-and-weekly-summary.png) — course and forum filters, current and previous activity, CSV export, and the latest scheduled summary.
 - [Moderation overview](screenshots/02-moderation.png) — unanswered and recently active threads across Spatial forums.
 - Listing icon: [marketplace-icon.png](marketplace-icon.png), 256 × 256.
@@ -23,11 +23,40 @@ bash tools/provision_key.sh "/path/to/private-parent/spatial-forum-pro"
 
 The directory contains a 3072-bit encrypted RSA signing key, the public verification key, and the empty licence registry. Back up the private key and the registry with access restricted to the custodian. Keep the registry in one authoritative location on a filesystem supporting hard links. Keep review and production keys separate. The production ZIP includes the public verification key as `public-key.pem` at the plugin root. The isolated QA runner substitutes a disposable key for its HTTP checks. A build without a bundled key accepts a QA public key from the Moodle root configuration.
 
+## Marketplace price options
+
+Use these fields for the separate paid listing `local_spatialforumpro`. Each paid option covers one Moodle site. [Lenarys Analytics](https://marketplace.moodle.com/plugins/local_la/prices) is a published example of a free download option alongside paid subscriptions.
+
+| Price option | Amount | Billing | Site allowance |
+| --- | ---: | --- | --- |
+| Free Trial | Free | No subscription | Three calendar months per eligible Moodle site |
+| Starter Monthly | 10 USD | Monthly | Up to 2,000 site accounts |
+| Starter Annual | 100 USD | Annual | Up to 2,000 site accounts |
+| Growth Monthly | 25 USD | Monthly | Up to 10,000 site accounts |
+| Growth Annual | 250 USD | Annual | Up to 10,000 site accounts |
+| Scale Monthly | 50 USD | Monthly | Up to 25,000 site accounts |
+| Scale Annual | 500 USD | Annual | Up to 25,000 site accounts |
+
+Enterprise is quoted separately for sites with more than 25,000 accounts. The [plan catalogue](../classes/local/plans.php) is the source of truth for the paid tiers. Site accounts include non-deleted accounts, including suspended accounts, and exclude Moodle's Guest account.
+
+**Free Trial description**
+
+> Try Spatial forum Pro free for three calendar months on your Moodle site. Download and install the add-on, then request a trial licence using the site fingerprint in the Pro settings. You can try Pro without providing a payment card. The trial ends automatically. To keep using Pro, choose a paid plan through Moodle Marketplace.
+
+The free option provides the ZIP. The provider issues the time-limited trial licence and checks the registry for prior use. Keep the free option separate from every recurring price so trial activation never starts a paid subscription. Review site history before reissuing a licence for a moved or renamed site.
+
+**Seller setup and checkout verification**
+
+- Sign in as the provider who owns the Pro listing. Complete the payout setup offered by Marketplace using the provider's verified business details. Prepare the seller's Terms of Sale and support details for approval before publishing. [Moodle's submission and purchasing guidance](https://docs.moodle.org/502/en/Add-on_FAQ)
+- When price editing is available, enter the seven options above. Record the Marketplace price identifiers alongside their tiers if the dashboard exposes them. Verify the displayed currency, amount and billing interval for each.
+- Verify the free download without starting a subscription. Check that the signed trial expires after three calendar months. For a paid checkout, verify that the successful order identifies the purchased price, the subtotal before tax and the billing period. Use a seller test mode if Marketplace offers one.
+- For the first paid order and each renewal, follow the fulfilment steps below. A failed payment or cancellation must never trigger another licence. Verify that the current signed term expires when expected.
+
 ## Marketplace checkout and licence fulfilment
 
 1. The customer installs the Pro add-on. A Moodle administrator copies the site fingerprint from **Site administration → Plugins → Local plugins → Spatial forum Pro**.
 2. Agree the trial start date and an appropriately sized plan. Issue the trial with the command below. The CLI calculates the end date three UTC calendar months later and allows only one trial per fingerprint in the shared registry. For a renamed or migrated site, verify its history before granting access. The fingerprint is derived from the configured Moodle base URL.
-3. After the trial, the customer actively selects a subscription at Marketplace checkout. Configure the six price options only when the listing and seller payment setup are available. Keep the trial outside recurring billing.
+3. After the trial, the customer actively selects a subscription at Marketplace checkout. Set up the free download and six recurring prices using the price table above. Keep the trial outside recurring billing.
 4. For each first order or renewal, authenticate to the seller's payment dashboard. Verify the captured payment, its product and price option, the subtotal before tax, the billing dates, and the purchaser's association with the supplied site fingerprint. Use the immutable reference for the **individual paid invoice/order**, including on retries. Never use the subscription identifier for multiple billing periods.
 5. Save only the fields below to a private file outside the checkout (permissions `600`). This is the operator's record of a verified order. A customer-supplied receipt or JSON must never be passed directly to the issuer.
 6. Run the issuer and make the token available via an approved channel. The customer pastes it into the licence setting when the paid term begins. Repeat for each successful renewal. Cancellation, failed payment or refund stops future issuance. A previously issued offline licence expires at the date signed into it.
