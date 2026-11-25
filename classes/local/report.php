@@ -38,6 +38,8 @@ final class report {
      * @param int $filtercourse Limit to this course
      * @param int $filterforum Limit to this course module
      * @param bool $moderation Include recent and unanswered thread details
+     * @param int $offset Number of accessible forums to skip before computing rows
+     * @param int|null $limit Maximum number of forum rows to compute, null for all
      * @return \Generator
      */
     public static function rows(
@@ -46,11 +48,20 @@ final class report {
         int $filtercourse = 0,
         int $filterforum = 0,
         bool $moderation = false,
+        int $offset = 0,
+        ?int $limit = null,
     ): \Generator {
         global $DB;
         $until ??= time() + 1;
         $previousstart = $since === null ? null : max(0, $since - ($until - $since));
+        $forumindex = 0;
         foreach (self::forums($filtercourse, $filterforum) as [$course, $cm, $activity]) {
+            if ($forumindex++ < $offset) {
+                continue;
+            }
+            if ($limit !== null && $forumindex > $offset + $limit) {
+                break;
+            }
             $courseid = (int) $course->id;
             $coursecontext = \context_course::instance($courseid);
             $context = $cm->context;

@@ -108,21 +108,9 @@ if (has_capability('moodle/site:config', context_system::instance())) {
 }
 
 if (!$enabled) {
-    $pricing = new html_table();
-    $pricing->caption = get_string('pricing', $component);
-    $pricing->head = array_map(static fn(string $column): string => get_string($column, $component),
-        ['plan', 'users', 'monthly', 'yearly']);
-    foreach (plans::CATALOGUE as $name => $plan) {
-        $custom = get_string('customprice', $component);
-        $pricing->data[] = [
-            get_string($name, $component),
-            $plan['limit'] ?? get_string('over25000', $component),
-            $plan['monthly'] === null ? $custom : '$' . $plan['monthly'],
-            $plan['yearly'] === null ? $custom : '$' . $plan['yearly'],
-        ];
-    }
-    echo html_writer::table($pricing);
-    echo html_writer::tag('p', get_string('trialterms', $component));
+    echo html_writer::tag('p', get_string('purchase_marketplace', $component));
+    echo html_writer::link('https://marketplace.moodle.com/plugins/local_spatialforumpro',
+        get_string('purchase_marketplace_link', $component), ['target' => '_blank', 'rel' => 'noopener']);
     echo $OUTPUT->footer();
     exit;
 }
@@ -180,10 +168,8 @@ $table->head = $moderation ? array_map(static fn(string $column): string => get_
 $table->data = [];
 $pagesize = 50;
 $remaining = false;
-foreach (report::rows($since, $until, $filtercourse, $filterforum, $moderation) as $index => $row) {
-    if ($index < $page * $pagesize) {
-        continue;
-    }
+foreach (report::rows($since, $until, $filtercourse, $filterforum, $moderation,
+        $page * $pagesize, $pagesize + 1) as $index => $row) {
     if (count($table->data) === $pagesize) {
         $remaining = true;
         break;

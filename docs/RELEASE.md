@@ -6,9 +6,11 @@
 - Component: `local_spatialforumpro`
 - Category: Local plugins
 - Dependency: `mod_spatialforum`, build `2026111600` or later
+- Requirements: Moodle 5.0–5.3 and PHP with OpenSSL enabled. A signed site licence, obtained after purchase through the Marketplace listing, unlocks the reports.
 - Short description: Track participation across Spatial forums, find unanswered discussions, and get a weekly overview in Moodle.
 - Description: Spatial forum Pro adds filters and CSV export for participation reports, a moderation overview with links to active and unanswered threads, and an optional weekly site summary. It works with your existing Spatial forum activities, so schools can add Pro without migrating conversations or attachments.
-- Pricing and trial: use the [Marketplace price options below](#marketplace-price-options).
+- Pricing and trial: use the [Moodle Marketplace listing](https://marketplace.moodle.com/plugins/local_spatialforumpro).
+- Support and public issue tracker: [GitHub Issues](https://github.com/ZasZorglub/moodle-local_spatialforumpro/issues).
 - [Participation report and weekly summary](screenshots/01-participation-and-weekly-summary.png) — course and forum filters, current and previous activity, CSV export, and the latest scheduled summary.
 - [Moderation overview](screenshots/02-moderation.png) — unanswered and recently active threads across Spatial forums.
 - Listing icon: [marketplace-icon.png](marketplace-icon.png), 256 × 256.
